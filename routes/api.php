@@ -14,4 +14,7 @@ Route::apiResource('/suratmasuks', SuratmasuksController::class);
 
 Route::apiResource('/users',UsersController::class);
 
-Route::get('suratmasuks/showok/{suratmasuk}', [SuratmasuksController::class, 'showok'])->name('suratmasuks.showok');
+// Route::get  ('suratmasuks/showok/{suratmasuk}', [SuratmasuksController::class, 'showok'])->name('suratmasuks.showok');
+
+// Route::post  ('/users/store', [UsersController::class, 'store'])->name('users.store');
+// Route::post('/suratmasuks/store', [SuratmasuksController::class, 'store']);

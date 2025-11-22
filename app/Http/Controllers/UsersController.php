@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Users;
 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 class UsersController extends Controller
 {
     /**
@@ -12,7 +15,21 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $users = Users::all();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get all students success',
+                'data' => $users,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Get all students failed',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -20,7 +37,36 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+     $validator = Validator::make($request->all(), [
+            'name'      => 'required',
+            'email'     => 'required|email|unique:users',
+            'password'  => 'required|min:8|confirmed'
+        ]);
+
+        //if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        //create user
+        $user = Users::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => bcrypt($request->password)
+        ]);
+
+        //return response JSON user is created
+        if($user) {
+            return response()->json([
+                'success' => true,
+                'user'    => $user,  
+            ], 201);
+        }
+
+        //return JSON process insert failed 
+        return response()->json([
+            'success' => false,
+        ], 409);
     }
 
     /**
@@ -28,7 +74,7 @@ class UsersController extends Controller
      */
     public function show(string $id)
     {
-          try {
+        try {
             $users = Users::find($id);
 
             return response()->json([
@@ -52,6 +98,8 @@ class UsersController extends Controller
     {
         //
     }
+  
+   
 
     /**
      * Remove the specified resource from storage.

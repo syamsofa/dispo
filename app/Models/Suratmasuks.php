@@ -11,7 +11,7 @@ class Suratmasuks extends Model
     use HasFactory;
     protected $fillable = [
         'tanggal_surat',
-        'juudl_surat',
+        'judul_surat',
         'tautan_surat'
     ];
 }

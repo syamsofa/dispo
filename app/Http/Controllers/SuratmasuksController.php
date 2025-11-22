@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Suratmasuks;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator;
+
 class SuratmasuksController extends Controller
 {
     /**
@@ -35,32 +37,38 @@ class SuratmasuksController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $request->validate([
+        // print_r([111]);
+        
+
+       $validator = Validator::make($request->all(), [
             'tanggal_surat' => 'required|string',
             'judul_surat' => 'required|string',
             'tautan_surat' => 'required|string'
         ]);
-        $suratmasuks = new Suratmasuks([
-            'tanggal_surat' => $request->tanggal_surat,
-            'judul_surat' => $request->judul_surat,
-            'tautan_surat' => $request->tautan_surat,
-
-        ]);
-        $suratmasuks->save();
-        if ($suratmasuks) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data added succesfully',
-                'data' => $suratmasuks
-            ]);
-        } else {
-            return Response()->json([
-                'status' => 'error',
-                'message' => 'Error adding data',
-                'data' => $suratmasuks
-            ]);
+        //if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
+
+        //create user
+        $suratmasuk = Suratmasuks::create([
+            'tanggal_surat'      => $request->tanggal_surat,
+            'judul_surat'     => $request->judul_surat,
+            'tautan_surat'  => $request->tautan_surat,
+        ]);
+
+        //return response JSON user is created
+        if($suratmasuk) {
+            return response()->json([
+                'success' => true,
+                'user'    => $suratmasuk,  
+            ], 201);
+        }
+
+        //return JSON process insert failed 
+        return response()->json([
+            'success' => false,
+        ], 409);
     }
 
     /**
