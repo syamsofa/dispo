@@ -37,3 +37,13 @@
 </body>
 
 </html>
+  <button class="btn btn-success">Click Me</button>
+@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    <script type="module">
+        $("button").click(function(){
+            alert("Thanks");
+        });
+    </script>
+
+  
